@@ -4,19 +4,37 @@ pipeline {
     stages {
         stage('Install') {
             steps {
-                bat 'npm install'
+                script {
+                    if (isUnix()) {
+                        sh 'npm ci'
+                    } else {
+                        bat 'npm ci'
+                    }
+                }
             }
         }
 
         stage('Test') {
             steps {
-                bat 'set CI=true&& npm test -- --watchAll=false'
+                script {
+                    if (isUnix()) {
+                        sh 'CI=true npm test -- --watchAll=false'
+                    } else {
+                        bat 'set CI=true&& npm test -- --watchAll=false'
+                    }
+                }
             }
         }
 
         stage('Build') {
             steps {
-                bat 'npm run build'
+                script {
+                    if (isUnix()) {
+                        sh 'npm run build'
+                    } else {
+                        bat 'npm run build'
+                    }
+                }
             }
         }
     }
