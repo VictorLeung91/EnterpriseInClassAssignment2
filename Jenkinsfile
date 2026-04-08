@@ -1,40 +1,26 @@
 pipeline {
-    agent any
+    agent {
+        docker {
+            image 'node:20'
+        }
+    }
 
     stages {
         stage('Install') {
             steps {
-                script {
-                    if (isUnix()) {
-                        sh 'npm ci'
-                    } else {
-                        bat 'npm ci'
-                    }
-                }
+                sh 'npm ci'
             }
         }
 
         stage('Test') {
             steps {
-                script {
-                    if (isUnix()) {
-                        sh 'CI=true npm test -- --watchAll=false'
-                    } else {
-                        bat 'set CI=true&& npm test -- --watchAll=false'
-                    }
-                }
+                sh 'CI=true npm test -- --watchAll=false'
             }
         }
 
         stage('Build') {
             steps {
-                script {
-                    if (isUnix()) {
-                        sh 'npm run build'
-                    } else {
-                        bat 'npm run build'
-                    }
-                }
+                sh 'npm run build'
             }
         }
     }
